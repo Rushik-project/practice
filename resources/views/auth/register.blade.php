@@ -7,7 +7,7 @@
         <title>Create your account · {{ config('app.name', 'Northstar') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="register-page">
+    <body class="auth-page">
         <main class="register-layout">
             <section class="register-story" aria-labelledby="story-title">
                 <a class="brand" href="{{ url('/') }}" aria-label="{{ config('app.name', 'Northstar') }} home">
@@ -155,6 +155,7 @@
                     </form>
 
                     <p class="form-legal">By creating an account, you agree to use this service responsibly.</p>
+                    <p class="form-legal">Already have an account? <a href="{{ route('login') }}">Sign in</a></p>
                 </div>
 
                 <footer class="content-footer">
