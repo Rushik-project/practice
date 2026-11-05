@@ -17,6 +17,16 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function dashboardRoute(): string
+    {
+        return $this->isAdmin() ? 'admin.dashboard' : 'employee.dashboard';
+    }
+
     /**
      * Get the attributes that should be cast.
      *

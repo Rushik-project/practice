@@ -1,0 +1,52 @@
+:root { color-scheme: light; }
+.theme-toolbar { display: flex; justify-content: flex-end; padding: 12px 24px; }
+button.theme-toggle { flex-shrink: 0; padding: 10px 14px; border: 1px solid #81958c; border-radius: 8px; background: #fff; color: #214b3b; font: 600 13px system-ui, sans-serif; cursor: pointer; }
+button.theme-toggle:hover { background: #e6efe9; }
+button.theme-toggle:focus-visible { outline: 3px solid #57a994; outline-offset: 3px; }
+html[data-theme="dark"] { color-scheme: dark; color: #e2eae6; background: #111c22; }
+html[data-theme="dark"] body { color: #e2eae6; background: #111c22; }
+html[data-theme="dark"] header { background: #102e28; }
+html[data-theme="dark"] :is(.card, .panel, .register-layout) { background: #1a292f; border-color: #394b51; }
+html[data-theme="dark"] :is(h1, h2, .form-heading h2, .mobile-brand) { color: #eff5f1; }
+html[data-theme="dark"] :is(p, .card span, td small, .hint, .empty, .form-heading p, .form-kicker, .field-hint, .form-legal, .content-footer, .remember-row) { color: #b1c2bd; }
+html[data-theme="dark"] :is(label, .field label) { color: #ccdad5; }
+html[data-theme="dark"] :is(input, textarea, select, .field-input) { color: #e5eee9; background: #122027 !important; border-color: #53666c !important; }
+html[data-theme="dark"] :is(input, textarea)::placeholder { color: #9badb4; }
+html[data-theme="dark"] :is(input, textarea, select):focus-visible { outline: 2px solid #74cbb1; outline-offset: 2px; }
+html[data-theme="dark"] th { background: #132228; color: #b4c7be; }
+html[data-theme="dark"] :is(td, th) { border-color: #34464c; }
+html[data-theme="dark"] a { color: #8cdbc0; }
+html[data-theme="dark"] .badge { color: #cedcd5; background: #34464b; }
+html[data-theme="dark"] :is(.present, .notice, .form-success) { color: #b3efd0; background: #193e32; border-color: #3c6d53; }
+html[data-theme="dark"] .complete { color: #b9d4ff; background: #253b59; }
+html[data-theme="dark"] :is(.error, .form-alert) { color: #ffc5bb; background: #542e2c; border-color: #87514c; }
+html[data-theme="dark"] .field-error { color: #ffb6ac; }
+html[data-theme="dark"] .field-input-error { border-color: #df8b80 !important; }
+html[data-theme="dark"] button.theme-toggle { color: #e1eee7; background: #263d3b; border-color: #74978b; }
+html[data-theme="dark"] button.theme-toggle:hover { background: #36534b; }
+html[data-theme="dark"] .auth-page { background: radial-gradient(ellipse at 10% 12%, #23354b, transparent 32rem), #111c22; }
+html[data-theme="dark"] .register-story { background: radial-gradient(ellipse at 20% 93%, #2a4661, transparent 42%), #101d2d; }
+html[data-theme="dark"] .register-button { background: #3a587f; }
+html[data-theme="dark"] .register-button:hover { background: #486c99; }
+header:has(.theme-toggle) { flex-wrap: wrap; }
+@media (max-width: 550px) { .theme-toolbar { padding: 12px 18px; } }
+.holiday-calendar { margin-bottom: 24px; }
+.calendar-heading, .calendar-navigation { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
+.calendar-heading h2 { margin-bottom: 8px; }
+.calendar-navigation { font-size: 13px; margin-bottom: 20px; }
+.calendar-table { table-layout: fixed; min-width: 760px; }
+.calendar-table th { font-size: 10px; padding: 12px 8px; }
+.calendar-table .calendar-day { height: 110px; vertical-align: top; padding: 8px; white-space: normal; border: 1px solid #dfe7e3; }
+.calendar-day time { display: inline-block; padding: 4px 7px; border-radius: 6px; }
+.calendar-outside time { opacity: .45; }
+.calendar-today time { background: #1e6551; color: white; font-weight: 700; }
+.calendar-event { display: block; margin-top: 6px; padding: 6px; border-radius: 6px; font-size: 11px; overflow-wrap: anywhere; }
+.calendar-national { background: #e4ecfb; color: #355c96; }
+.calendar-company { background: #def3e8; color: #1c6d4b; }
+.calendar-event small { color: inherit; font-size: 10px; }
+.calendar-national-list { margin-top: 22px; }
+.calendar-national-list h2 { margin-bottom: 12px; }
+.calendar-national-summary { display: inline-block; margin: 0 22px 10px 0; font-size: 13px; }
+html[data-theme="dark"] .calendar-table .calendar-day { border-color: #34464c; }
+html[data-theme="dark"] .calendar-national { background: #253b59; color: #b9d4ff; }
+html[data-theme="dark"] .calendar-company { background: #193e32; color: #b3efd0; }

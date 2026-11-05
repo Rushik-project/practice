@@ -30,6 +30,6 @@ class RegisterController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('register')->with('status', 'Your account is ready. Welcome aboard!');
+        return redirect()->route('employee.dashboard')->with('status', 'Your account is ready. Welcome aboard!');
     }
 }

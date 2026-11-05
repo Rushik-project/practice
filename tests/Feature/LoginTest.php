@@ -31,7 +31,7 @@ class LoginTest extends TestCase
             'password' => 'a-strong-password',
             'remember' => '1',
         ])
-            ->assertRedirect(route('register'));
+            ->assertRedirect(route('employee.dashboard'));
 
         $this->assertAuthenticatedAs($user);
     }

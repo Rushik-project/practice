@@ -32,7 +32,7 @@ class RegisterTest extends TestCase
 
         $user = User::where('email', 'alex@example.com')->firstOrFail();
 
-        $response->assertRedirect(route('register'))
+        $response->assertRedirect(route('employee.dashboard'))
             ->assertSessionHas('status');
         $this->assertAuthenticatedAs($user);
         $this->assertTrue(Hash::check('a-strong-password', $user->password));

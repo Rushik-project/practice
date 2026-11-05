@@ -30,6 +30,6 @@ class LoginController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('register'));
+        return redirect()->route($request->user()->dashboardRoute());
     }
 }

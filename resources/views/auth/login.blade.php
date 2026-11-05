@@ -6,8 +6,10 @@
         <meta name="theme-color" content="#f4f5f7">
         <title>Sign in · {{ config('app.name', 'Northstar') }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @include('partials.theme-head')
     </head>
     <body class="auth-page">
+        <div class="theme-toolbar">@include('partials.theme-toggle')</div>
         <main class="register-layout">
             <section class="register-story" aria-labelledby="story-title">
                 <a class="brand" href="{{ route('login') }}" aria-label="{{ config('app.name', 'Northstar') }} home">
