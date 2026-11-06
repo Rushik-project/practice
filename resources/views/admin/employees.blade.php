@@ -12,12 +12,22 @@
                 <button>Search</button><a href="{{ route('employees.index') }}">Reset</a>
             </form>
             <div class="table-wrap"><table>
-                <thead><tr><th>Employee</th><th>Department</th><th>Employee login</th></tr></thead>
+                <thead><tr><th>Employee</th><th>Department</th><th>Daily target</th><th>Employee login</th><th>Details</th></tr></thead>
                 <tbody>
                 @forelse($employees as $employee)
                     <tr>
                         <td><strong>{{ $employee->name }}</strong><small>{{ $employee->email }}</small></td>
                         <td>{{ $employee->department }}</td>
+                        <td>
+                            <form method="POST" action="{{ route('employees.working-hours', $employee) }}">
+                                @csrf
+                                @method('PATCH')
+                                @if(request('search'))<input type="hidden" name="search" value="{{ request('search') }}">@endif
+                                <label for="daily-working-hours-{{ $employee->id }}">Hours per day</label>
+                                <input id="daily-working-hours-{{ $employee->id }}" type="number" name="daily_working_hours" min="1" max="24" step="0.25" value="{{ $employee->daily_working_hours }}" required>
+                                <button>Update target</button>
+                            </form>
+                        </td>
                         <td>
                             @if($employee->account_id)
                                 <span class="badge present">Account active</span>
@@ -33,9 +43,23 @@
                                 </details>
                             @endif
                         </td>
+                        <td>
+                            <details>
+                                <summary>Edit details</summary>
+                                <form method="POST" action="{{ route('employees.update', $employee) }}" style="margin-top:16px;min-width:220px">
+                                    @csrf
+                                    @method('PATCH')
+                                    @if(request('search'))<input type="hidden" name="search" value="{{ request('search') }}">@endif
+                                    <div class="field"><label for="employee-name-{{ $employee->id }}">Full name</label><input id="employee-name-{{ $employee->id }}" name="name" value="{{ $employee->name }}" maxlength="255" required></div>
+                                    <div class="field"><label for="employee-email-{{ $employee->id }}">Email</label><input id="employee-email-{{ $employee->id }}" type="email" name="email" value="{{ $employee->email }}" maxlength="255" required></div>
+                                    <div class="field"><label for="employee-department-{{ $employee->id }}">Department</label><input id="employee-department-{{ $employee->id }}" name="department" value="{{ $employee->department }}" maxlength="255" required></div>
+                                    <button type="submit">Save details</button>
+                                </form>
+                            </details>
+                        </td>
                     </tr>
                 @empty
-                    <tr><td colspan="3" class="empty">No employees found. Add your first employee using the form.</td></tr>
+                    <tr><td colspan="5" class="empty">No employees found. Add your first employee using the form.</td></tr>
                 @endforelse
                 </tbody>
             </table></div>

@@ -25,32 +25,90 @@
                 <button>Apply filters</button><a href="{{ route('attendance.index') }}">Today</a>
             </form>
             <div class="table-wrap"><table>
-                <thead><tr><th>Employee</th><th>Status</th><th>Check in</th><th>Check out</th><th>Hours</th><th>Action</th></tr></thead>
+                <thead><tr><th>Employee</th><th>Status</th><th>Check in</th><th>Check out</th><th>Hours</th><th>Timer</th><th>Daily target</th><th>Action</th></tr></thead>
                 <tbody>
                 @forelse($employees as $employee)
                     @php($record = $employee->attendances->first())
                     <tr>
                         <td><strong>{{ $employee->name }}</strong><small>{{ $employee->department }}</small><small>{{ $employee->email }}</small></td>
-                        <td><span class="badge {{ $record ? ($record->checked_out_at ? 'complete' : 'present') : '' }}">{{ $record ? ($record->checked_out_at ? 'Completed' : 'Working') : 'Not checked in' }}</span></td>
-                        <td>{{ $record?->checked_in_at->format('H:i') ?? '—' }}</td>
-                        <td>{{ $record?->checked_out_at?->format('H:i') ?? '—' }}</td>
-                        <td>{{ $record?->checked_out_at ? number_format($record->checked_in_at->diffInMinutes($record->checked_out_at) / 60, 2).' h' : '—' }}</td>
+                        @php($openBreak = $record?->breaks->firstWhere('break_ended_at', null))
+                        <td><span class="badge {{ $record ? ($record->checked_out_at ? 'complete' : ($openBreak ? '' : 'present')) : '' }}">{{ $record ? ($record->checked_out_at ? 'Completed' : ($openBreak ? 'On break' : 'Working')) : 'Not checked in' }}</span></td>
+                        <td>{{ $record?->checked_in_at->format('H:i:s') ?? '—' }}</td>
+                        <td>{{ $record?->checked_out_at?->format('H:i:s') ?? '—' }}</td>
+                        <td>{{ $record?->checked_out_at ? number_format($record->workedSeconds() / 3600, 2).' h' : '—' }}</td>
+                        <td>
+                            @if($record)
+                                @php($workedSeconds = $record->workedSeconds())
+                                <span class="work-timer" data-work-timer data-started-at="{{ $record->checked_in_at->timestamp }}" data-breaks="{{ $record->breaks->map(fn ($break) => [$break->break_started_at->timestamp, $break->break_ended_at?->timestamp])->values()->toJson() }}" @if($record->checked_out_at) data-stopped-at="{{ $record->checked_out_at->timestamp }}" @endif>{{ sprintf('%02d:%02d:%02d', intdiv($workedSeconds, 3600), intdiv($workedSeconds % 3600, 60), $workedSeconds % 60) }}</span>
+                            @else
+                                <span>—</span>
+                            @endif
+                        </td>
+                        <td>{{ $employee->daily_working_hours }} h</td>
                         <td>
                             @if($date === today()->toDateString() && ! $record?->checked_out_at)
-                                <form method="POST" action="{{ route($record ? 'attendance.check-out' : 'attendance.check-in', $employee) }}">@csrf<button aria-label="{{ $record ? 'Check out' : 'Check in' }} {{ $employee->name }}">{{ $record ? 'Check out' : 'Check in' }}</button></form>
+                                @if($record)
+                                    @if($openBreak)
+                                        <form method="POST" action="{{ route('attendance.break-out', $employee) }}">@csrf<button aria-label="Break out {{ $employee->name }}">Break out</button></form>
+                                    @else
+                                        <form method="POST" action="{{ route('attendance.break-in', $employee) }}">@csrf<button aria-label="Break in {{ $employee->name }}">Break in</button></form>
+                                        <form method="POST" action="{{ route('attendance.check-out', $employee) }}">@csrf<button aria-label="Check out {{ $employee->name }}">Check out</button></form>
+                                    @endif
+                                @else
+                                    <form method="POST" action="{{ route('attendance.check-in', $employee) }}">@csrf<button aria-label="Check in {{ $employee->name }}">Check in</button></form>
+                                @endif
+                                <small>Current time (IST): <span data-current-time data-timezone="Asia/Kolkata">{{ now('Asia/Kolkata')->format('H:i:s') }}</span></small>
                             @else
                                 <span>—</span>
                             @endif
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="6" class="empty">{{ $isAdmin ? 'No employees found. Add an employee to start tracking attendance.' : 'No employee profile linked yet.' }}</td></tr>
+                    <tr><td colspan="8" class="empty">{{ $isAdmin ? 'No employees found. Add an employee to start tracking attendance.' : 'No employee profile linked yet.' }}</td></tr>
                 @endforelse
                 </tbody>
             </table></div>
             <div class="pagination">{{ $employees->links() }}</div>
-            <p class="hint">Times use {{ config('app.timezone') }}. Check-in and check-out record the current time. Past dates are read-only.</p>
+            <p class="hint">Times use India Standard Time (IST). Check-in and check-out record the current time. Past dates are read-only.</p>
         </section>
     </div>
     @include('partials.holiday-calendar')
+    <script>
+        const serverTimestampAtLoad = {{ now()->timestamp }};
+        const browserTimestampAtLoad = Date.now();
+
+        const updateAttendanceClocks = () => {
+            const currentTimestamp = serverTimestampAtLoad + Math.floor((Date.now() - browserTimestampAtLoad) / 1000);
+
+            document.querySelectorAll('[data-work-timer]').forEach((timer) => {
+                const startedAt = Number(timer.dataset.startedAt);
+                const stoppedAt = timer.dataset.stoppedAt
+                    ? Number(timer.dataset.stoppedAt)
+                    : currentTimestamp;
+                const breaks = JSON.parse(timer.dataset.breaks || '[]');
+                const breakSeconds = breaks.reduce((total, [breakStartedAt, breakEndedAt]) => {
+                    return total + Math.max(0, Math.min(stoppedAt, breakEndedAt || currentTimestamp) - breakStartedAt);
+                }, 0);
+                const elapsedSeconds = Math.max(0, Math.floor(stoppedAt - startedAt - breakSeconds));
+                const hours = Math.floor(elapsedSeconds / 3600).toString().padStart(2, '0');
+                const minutes = Math.floor((elapsedSeconds % 3600) / 60).toString().padStart(2, '0');
+                const seconds = (elapsedSeconds % 60).toString().padStart(2, '0');
+
+                timer.textContent = `${hours}:${minutes}:${seconds}`;
+            });
+
+            document.querySelectorAll('[data-current-time]').forEach((clock) => {
+                clock.textContent = new Intl.DateTimeFormat('en-GB', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hourCycle: 'h23',
+                    timeZone: clock.dataset.timezone,
+                }).format(new Date(currentTimestamp * 1000));
+            });
+        };
+
+        updateAttendanceClocks();
+        window.setInterval(updateAttendanceClocks, 1000);
+    </script>
 @endsection

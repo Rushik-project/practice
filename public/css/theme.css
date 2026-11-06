@@ -24,11 +24,25 @@ html[data-theme="dark"] .field-error { color: #ffb6ac; }
 html[data-theme="dark"] .field-input-error { border-color: #df8b80 !important; }
 html[data-theme="dark"] button.theme-toggle { color: #e1eee7; background: #263d3b; border-color: #74978b; }
 html[data-theme="dark"] button.theme-toggle:hover { background: #36534b; }
+html[data-theme="dark"] .settings-dropdown { background: #1a292f; border-color: #394b51; }
+html[data-theme="dark"] .settings-dropdown :is(a, button) { color: #e2eae6; }
+html[data-theme="dark"] .settings-dropdown :is(a, button):hover { background: #263d3b; color: #e2eae6; }
+html[data-theme="dark"] .profile-details dt { color: #ccdad5; }
+html[data-theme="dark"] .profile-photo { border-color: #53666c; }
+html[data-theme="dark"] .profile-photo-placeholder { background: #193e32; color: #b3efd0; }
 html[data-theme="dark"] .auth-page { background: radial-gradient(ellipse at 10% 12%, #23354b, transparent 32rem), #111c22; }
 html[data-theme="dark"] .register-story { background: radial-gradient(ellipse at 20% 93%, #2a4661, transparent 42%), #101d2d; }
 html[data-theme="dark"] .register-button { background: #3a587f; }
 html[data-theme="dark"] .register-button:hover { background: #486c99; }
 header:has(.theme-toggle) { flex-wrap: wrap; }
+.dashboard-nav { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.dashboard-nav .nav-button, .settings-menu summary { display: inline-flex; align-items: center; justify-content: center; min-height: 38px; padding: 8px 12px; border: 1px solid #ffffff45; border-radius: 8px; background: #ffffff12; color: #fff; font: 600 13px system-ui, sans-serif; text-decoration: none; transition: background-color .15s ease, color .15s ease; }
+.dashboard-nav .nav-button:hover, .dashboard-nav .nav-button:focus-visible, .settings-menu[open] summary, .settings-menu summary:hover { background: #fff; color: #174b3d; }
+.dashboard-nav .nav-button:focus-visible, .settings-menu summary:focus-visible { outline: 3px solid #9de0c8; outline-offset: 2px; }
+.settings-menu summary { cursor: pointer; list-style: none; }
+.settings-menu summary::-webkit-details-marker { display: none; }
+html[data-theme="dark"] .dashboard-nav .nav-button, html[data-theme="dark"] .settings-menu summary { color: #e8f4ee; border-color: #74978b; background: #263d3b; }
+html[data-theme="dark"] .dashboard-nav .nav-button:hover, html[data-theme="dark"] .dashboard-nav .nav-button:focus-visible, html[data-theme="dark"] .settings-menu[open] summary, html[data-theme="dark"] .settings-menu summary:hover { color: #102e28; background: #b6e4d1; }
 @media (max-width: 550px) { .theme-toolbar { padding: 12px 18px; } }
 .holiday-calendar { margin-bottom: 24px; }
 .calendar-heading, .calendar-navigation { display: flex; justify-content: space-between; align-items: center; gap: 18px; flex-wrap: wrap; }
@@ -50,3 +64,15 @@ header:has(.theme-toggle) { flex-wrap: wrap; }
 html[data-theme="dark"] .calendar-table .calendar-day { border-color: #34464c; }
 html[data-theme="dark"] .calendar-national { background: #253b59; color: #b9d4ff; }
 html[data-theme="dark"] .calendar-company { background: #193e32; color: #b3efd0; }
+.colleague-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); gap: 18px; }
+.colleague-card { display: flex; align-items: center; gap: 16px; min-width: 0; padding: 18px; border: 1px solid #dfe7e3; border-radius: 12px; background: #fff; }
+.colleague-photo, .colleague-photo-placeholder { flex: 0 0 64px; width: 64px; height: 64px; border-radius: 50%; }
+.colleague-photo { object-fit: cover; border: 2px solid #dfe7e3; }
+.colleague-photo-placeholder { display: grid; place-items: center; background: #def3e8; color: #1c6d4b; font-size: 24px; font-weight: 700; }
+.colleague-info { min-width: 0; }
+.colleague-info strong, .colleague-info span { display: block; overflow-wrap: anywhere; }
+.colleague-info span { margin-top: 5px; color: #657873; font-size: 13px; }
+html[data-theme="dark"] .colleague-card { border-color: #394b51; background: #1a292f; }
+html[data-theme="dark"] .colleague-photo { border-color: #53666c; }
+html[data-theme="dark"] .colleague-photo-placeholder { background: #193e32; color: #b3efd0; }
+html[data-theme="dark"] .colleague-info span { color: #b1c2bd; }
